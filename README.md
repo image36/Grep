@@ -14,9 +14,9 @@ The program...
 4. -v means invert match.  Find things that _don't_ match this pattern.
 5. -l suppress normal output and just show file names.
 6. -i ignore case. 
-7. Syntax should look like this:  grep <options> <pattern> <file/directory>
+7. Syntax should look like this:  grep &lt;options&gt; &lt;pattern&gt; <file/directory&gt;
 8. Options are optional.  Options begin with - and are 1 character. (-r,-v, -i or -l for now).
 9. Pattern is required.
 10. File/directory is optional, defaults to all files in current directory.  Uses regex to match when used.
-11. Should output like: <file>: <matching line in file> ex: default.html: <body>
+11. Should output like: &lt;file&gt; &lt;matching line in file&gt; ex: default.html: <body>
 
