@@ -24,6 +24,7 @@ namespace Grep
                 -l                  Suppress normal output and just show file names
                 -i                  Ignore case.
                 ");
+                return;
             }
            private static void readArgs(string[] args)
            {
