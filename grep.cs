@@ -25,42 +25,41 @@ namespace Grep
                 -i                  Ignore case.
                 ");
             }
-            
-            var dirs = Directory.GetDirectories(p);
-            var files = Directory.GetFiles(p);
-            foreach (var f in files)
-            {
-                var file = new FileInfo(f);
-                string text = File.ReadAllText(f);
-               
-            }
-            foreach (var arg in args)
-            {
-                if(arg == "-r")
+           private static void readArgs(string[] args)
+           {
+                foreach (var arg in args)
                 {
-                    recursiveMode = true;
+                    if(arg == "-r")
+                    {
+                        recursiveMode = true;
+                    }
+                    else if(arg == "-i")
+                    {
+                        ignoreCase = true;
+                    }
+                    else if(arg == "-v")
+                    {
+                        invertMatch = true;
+                    }
+                    else if(arg == "-l")
+                    {
+                        fileNameOnly = true;
+                    }
+                    else if (arg.Length > 2)
+    
+                    { 
+                    
+                    }
                 }
-                else if(arg == "-i")
-                {
-                    ignoreCase = true;
-                }
-                else if(arg == "-v")
-                {
-                    invertMatch = true;
-                }
-                else if(arg == "-l")
-                {
-                    fileNameOnly = true;
-                }
-                else if (arg.Length > 2)
-
-                { 
-                
-                }
-            }
-
+           }
+           private static void readFiles()
+           {
+               var dirs = Directory.GetDirectories();
+               var files = Directory.GetFiles();
+               foreach (var fi in files)
+               {
+                   string text = File.ReadAllText(f);
+               }
+           }
         }
-       
-
-    }
 }
