@@ -38,14 +38,14 @@ namespace Command_line_practice
             foreach (string arg in args)
             {
 
-                if (arg.StartsWith("-pattern"))
+                if (arg.ToLower().StartsWith("-pattern"))
                 {
                     var x = arg.Substring(9);
                     pattern = x;
                     //System.Console.WriteLine(pattern);
 
                 }
-                else if (arg.StartsWith("-path"))
+                else if (arg.ToLower().StartsWith("-path"))
                 {
                     var x = arg.Substring(6);
                     path = x;
