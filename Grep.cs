@@ -11,21 +11,35 @@ namespace Command_line_practice
     class Program
     {
         private static string pattern = string.Empty;
-        private static String path = string.Empty;
+        private static string path = "";
         private static bool recursive = false;
         private static bool supress = false;
+        private static bool IgnoreCase = false;
+        public static bool inverse = false;
         private static string Help = @"This application lists files based on matching Regular Expression.
                 Arguments:
                 -?                  Show help message.
-                -pattern            What to search for.
-                -path               Where to search.
-                -r or -R            Recursive search
-                -i                  Supress results to show only file names.
+                -r                  Recursive search
+                -l                  Supress results to show only file names.
+                -i                  ignore case.
+                -v                  invert pattern.
+                path must look like this: C:\folder\.
+                pattern must begin with %.
                 ";
         static void Main(string[] args)
         {
             readArgs(args);
             DisplayArgs(args);
+            if (path == "")
+            {
+                path = Directory.GetCurrentDirectory();
+            }
+            else if (path != "")
+            {
+                var x = path;
+                path = x;
+            }
+
             if (pattern == "")
             {
                 string msg = string.Format("Pattern can not be empty ");
@@ -34,30 +48,20 @@ namespace Command_line_practice
             if (pattern != "")
             {
                 System.Console.WriteLine(@"Your search in {0} for {1} returned the following:       
-Start:**********************************************************************
+****************************************************************************
 ****************************************************************************
             ", path, pattern);
-                SearchDirectory(path, pattern, recursive, supress);
+                SearchDirectory(path, pattern, recursive, supress, IgnoreCase);
             }
-            System.Console.WriteLine(
-@"End:************************************************************************
-****************************************************************************");
-
             System.Console.ReadKey();
         }
         private static void readArgs(string[] args)
         {
             foreach (string arg in args)
             {
-                if (arg.ToLower().StartsWith("-pattern"))
+                if (arg.ToLower().Contains(":"+"\\"))
                 {
-                    var x = arg.Substring(9);
-                    pattern = x;
-                }
-                else if (arg.ToLower().StartsWith("-path"))
-                {
-                    var x = arg.Substring(6);
-                    path = x;
+                      path = arg;
                 }
                 else if (arg.StartsWith("-?"))
                 {
@@ -71,14 +75,26 @@ Start:**********************************************************************
                 {
                     supress = true;
                 }
+                else if (arg.ToLower().StartsWith("-i"))
+                {
+                    IgnoreCase = true;
+                }
+                else if (arg.ToLower().StartsWith("-v"))
+                {
+                    inverse = true;
+                }
+                else if (arg.StartsWith("%"))
+                {
+                    var x = arg.Substring(1);
+                    pattern = x;
+                }
                 else
                 {
-                    System.Console.WriteLine("{0} is not a valid argument", arg);
-                    System.Console.WriteLine(Help);
+                    System.Console.WriteLine("{0} is not a valid argument. Type -? for help", arg);
                 }
             }
         }
-        private static void DisplayArgs(string []args)
+        private static void DisplayArgs(string[] args)
         {
             string msg = string.Format("There were {0} args passed", args.Length);
             System.Console.WriteLine(msg);
@@ -87,32 +103,46 @@ Start:**********************************************************************
                 Console.WriteLine(arg);
             }
         }
-        public static void SearchDirectory(string path, string pattern, bool recursive, bool supress)
+        public static void SearchDirectory(string path, string pattern, bool recursive, bool supress, bool IgnoreCase)
         {
-            string[] RecursiveFiles = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories);
-            string[] NotRecursiveFiles = Directory.GetFiles(path);
             string[] files;
             try
+            
             {
                 if (recursive == true)
                 {
-                    files = RecursiveFiles;
+                    files = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories);
                 }
-                else 
+                else
                 {
-                    files = NotRecursiveFiles;
+                    files = Directory.GetFiles(path);
                 }
                 foreach (var f in files)
                 {
                     var file = new FileInfo(f);
                     {
-                        if (Regex.IsMatch(file.Name, pattern, RegexOptions.IgnoreCase) && supress == true)
+                        if (IgnoreCase == true)
                         {
-                            Console.WriteLine(file.Name);
+                            if (Regex.IsMatch(file.Name, pattern, RegexOptions.IgnoreCase) && supress == true)
+                            {
+                                Console.WriteLine(file.Name);
+                            }
+                            else if (Regex.IsMatch(file.Name, pattern, RegexOptions.IgnoreCase) && supress == false)
+                            {
+                                Console.WriteLine(file.DirectoryName + "\\" + file.Name);
+                            }
                         }
-                        else if (Regex.IsMatch(file.Name, pattern, RegexOptions.IgnoreCase) && supress == false)
+                        else if (IgnoreCase == false)
                         {
-                            Console.WriteLine(file.DirectoryName + "\\" + file.Name);
+                            if (Regex.IsMatch(file.Name, pattern) && supress == true)
+                            {
+                                Console.WriteLine(file.Name);
+                            }
+                            else if (Regex.IsMatch(file.Name, pattern) && supress == false)
+                            {
+                                Console.WriteLine(file.DirectoryName + "\\" + file.Name);
+                            }
+
                         }
                     }
                 }
