@@ -55,6 +55,7 @@ namespace Command_line_practice
             }
             System.Console.ReadKey();
         }
+        //Reads and parses argumets that are passed in from the command line
         private static void readArgs(string[] args)
         {
             foreach (string arg in args)
@@ -94,6 +95,7 @@ namespace Command_line_practice
                 }
             }
         }
+        //Displays the arguments and number of arguments in the results
         private static void DisplayArgs(string[] args)
         {
             string msg = string.Format("There were {0} args passed", args.Length);
@@ -103,6 +105,7 @@ namespace Command_line_practice
                 Console.WriteLine(arg);
             }
         }
+        //Searches directory based on parameters gathered from the arguments that were parsed
         public static void SearchDirectory(string path, string pattern, bool recursive, bool supress, bool IgnoreCase)
         {
             string[] files;
